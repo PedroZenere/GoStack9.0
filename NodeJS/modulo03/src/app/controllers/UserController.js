@@ -62,16 +62,18 @@ class UserController {
 
     const user = await User.findByPk(req.userId);
 
-    if (email !== user.email) {
-      const userExist = verifyEmailExist(email);
+    if (email) {
+      if (email !== user.email) {
+        const userExist = verifyEmailExist(email);
 
-      if (userExist) {
-        return res.status(401).json({ error: 'Email already exist.' });
+        if (userExist) {
+          return res.status(401).json({ error: 'Email already exist.' });
+        }
       }
-    }
 
-    if (oldPassword && !(await user.checkPassword(oldPassword))) {
-      return res.status(401).json({ error: 'Password Incorrect.' });
+      if (oldPassword && !(await user.checkPassword(oldPassword))) {
+        return res.status(401).json({ error: 'Password Incorrect.' });
+      }
     }
 
     const { id, name, provider } = await user.update(req.body);
