@@ -3,6 +3,8 @@ import Orders from '../models/Orders'
 import Recipients from '../models/Recipients'
 import Deliveryman from '../models/Deliveryman'
 import File from '../models/File'
+import Filesignature from '../models/Filesignature'
+import Mail from '../../lib/Mail'
 
 class OrdersController {
   async index(req, res) {
@@ -26,6 +28,13 @@ class OrdersController {
             'cidade',
             'cep',
           ],
+          include: [
+            {
+              model: Filesignature,
+              as: 'signature',
+              attributes: ['id', 'path', 'url'],
+            },
+          ],
         },
         {
           model: Deliveryman,
@@ -44,12 +53,6 @@ class OrdersController {
 
     return res.json(orders)
   }
-
-  /**
-{
-            
-           
-   */
 
   async store(req, res) {
     const schema = Yup.object().shape({
@@ -91,15 +94,66 @@ class OrdersController {
       product,
     })
 
-    /* TODO: adicionar envio de emails
-                ''     checagem de datas            
-    * */
+    /* TODO: adicionar envio de emails */
+    try {
+      await Mail.sendMail({
+        to: `${isDeliveryman.name} <${isDeliveryman.email}>`,
+        subject: 'Novas Entregas',
+        text:
+          'Nova entrega cadastrada para você! Está disponível para retirada.',
+      })
+    } catch (err) {
+      return res.status(401).json({ error: 'Send Mail error' })
+    }
 
     return res.json(orders)
   }
 
   async update(req, res) {
-    return res.json()
+    const schema = Yup.object().shape({
+      recipient_id: Yup.number(),
+      deliveryman_id: Yup.number(),
+      product: Yup.string(),
+    })
+
+    if (!(await schema.isValid(req.body))) {
+      return res.status(400).json({ error: 'Validation failed' })
+    }
+
+    const { id } = req.params.id
+
+    const orders = await Orders.findByPk(id)
+
+    if (!orders) {
+      return res.status(400).json({ error: 'Order not found' })
+    }
+
+    // Checar se o id do recipient e do deliveryman existe
+    const { recipient_id, deliveryman_id } = req.body
+
+    const isRecipient = await Recipients.findOne({
+      where: {
+        id: recipient_id,
+      },
+    })
+
+    const isDeliveryman = await Deliveryman.findOne({
+      where: {
+        id: deliveryman_id,
+      },
+    })
+
+    if (!isRecipient) {
+      return res.status(400).json({ error: 'Recipient not found.' })
+    }
+
+    if (!isDeliveryman) {
+      return res.status(400).json({ error: 'Deliveryman not found.' })
+    }
+
+    const orderAt = await orders.update(req.body)
+
+    return res.json(orderAt)
   }
 
   async delete(req, res) {

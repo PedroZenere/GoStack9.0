@@ -9,6 +9,8 @@ import FileController from './app/controllers/FileController'
 import FilesignatureController from './app/controllers/FilesignatureController'
 import DeliverymanController from './app/controllers/DeliverymanController'
 import OrdersController from './app/controllers/OrdersController'
+import SingleordersController from './app/controllers/SingleordersController'
+import DeliveredOrdersController from './app/controllers/DeliveredOrdersController'
 
 import authMiddleware from './app/middleware/auth'
 
@@ -24,6 +26,7 @@ routes.use(authMiddleware)
 routes.get('/recipients', RecipientsController.index)
 routes.post('/recipients', RecipientsController.store)
 routes.put('/recipients/:id', RecipientsController.update)
+routes.delete('/recipients/:id', RecipientsController.delete)
 
 routes.get('/deliveryman', DeliverymanController.index)
 routes.post('/deliveryman', DeliverymanController.store)
@@ -37,10 +40,14 @@ routes.post(
   upload.single('file'),
   FilesignatureController.store
 )
-
+// TODO: Arrumar rotas de put e delete
 routes.get('/orders', OrdersController.index)
 routes.post('/orders', OrdersController.store)
 routes.put('/orders', OrdersController.store)
 routes.delete('/orders', OrdersController.store)
+
+routes.get('/singleorders/:id', SingleordersController.index)
+
+routes.get('/deliveryman/:id/deliveries', DeliveredOrdersController.index)
 
 module.exports = routes

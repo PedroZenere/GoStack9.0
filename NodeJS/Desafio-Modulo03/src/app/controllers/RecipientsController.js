@@ -123,6 +123,22 @@ class RecipientsController {
       signature_id,
     })
   }
+
+  async delete(req, res) {
+    const { id } = req.params
+
+    const recipient = await Recipients.findByPk(id)
+
+    if (!recipient) {
+      return res.status(400).json({ error: 'Recipient not found' })
+    }
+
+    await Recipients.destroy({
+      where: { id },
+    })
+
+    return res.json({ recipient })
+  }
 }
 
 export default new RecipientsController()

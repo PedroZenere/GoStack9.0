@@ -115,7 +115,7 @@ class DeliverymanController {
     const { id, name, email } = await Deliveryman.findByPk(req.params.id)
 
     await Deliveryman.destroy({
-      where: { id: req.params.id },
+      where: { id },
     })
 
     return res.json({
