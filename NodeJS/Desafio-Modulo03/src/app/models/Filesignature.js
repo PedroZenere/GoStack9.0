@@ -1,6 +1,6 @@
 import Sequelize, { Model } from 'sequelize'
 
-class File extends Model {
+class Filesignature extends Model {
   static init(sequelize) {
     super.init(
       {
@@ -22,8 +22,4 @@ class File extends Model {
   }
 }
 
-export default File
-
-/**
- *
- */
+export default Filesignature

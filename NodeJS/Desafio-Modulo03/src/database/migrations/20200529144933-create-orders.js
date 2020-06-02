@@ -16,13 +16,7 @@ module.exports = {
       },
       deliveryman_id: {
         type: Sequelize.INTEGER,
-        references: { model: 'delivery_man', key: 'id' },
-        onUpdate: 'CASCADE',
-        onDelete: 'SET NULL',
-        allowNull: true,
-      },
-      signature_id: {
-        type: Sequelize.INTEGER,
+        references: { model: 'deliverymans', key: 'id' },
         onUpdate: 'CASCADE',
         onDelete: 'SET NULL',
         allowNull: true,
@@ -55,3 +49,13 @@ module.exports = {
     return queryInterface.dropTable('orders')
   },
 }
+
+/**
+ * signature_id: {
+        type: Sequelize.INTEGER,
+        references
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL',
+        allowNull: true,
+      },
+ */

@@ -18,6 +18,13 @@ class Recipients extends Model {
     )
     return this
   }
+
+  static associate(models) {
+    this.belongsTo(models.Filesignature, {
+      foreignKey: 'signature_id',
+      as: 'signature',
+    })
+  }
 }
 
 export default Recipients

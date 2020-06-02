@@ -4,45 +4,45 @@ import User from '../models/User'
 import authConfig from '../../config/auth'
 
 const verifyUserExists = async (compEmail) => {
-    return User.findOne({ where: { email: compEmail } })
+  return User.findOne({ where: { email: compEmail } })
 }
 
 class SessionController {
-    async store(req, res) {
-        const schema = Yup.object().shape({
-            email: Yup.string().email(),
-            password: Yup.string().min(6),
-        })
+  async store(req, res) {
+    const schema = Yup.object().shape({
+      email: Yup.string().email(),
+      password: Yup.string().min(6),
+    })
 
-        if (!(await schema.isValid(req.body))) {
-            return res.status(400).json({ error: 'Validation error.' })
-        }
-
-        const { email, password } = req.body
-
-        const user = await verifyUserExists(email)
-
-        if (!user) {
-            return res.status(401).json({ error: 'Email not exists.' })
-        }
-
-        if (!(await user.checkPassword(password))) {
-            return res.status(401).json({ error: 'Password does not match.' })
-        }
-
-        const { id, name } = user
-
-        return res.status(200).json({
-            user: {
-                id,
-                name,
-                email,
-            },
-            token: jwt.sign({ id }, authConfig.secret, {
-                expiresIn: authConfig.expiresIn,
-            }),
-        })
+    if (!(await schema.isValid(req.body))) {
+      return res.status(400).json({ error: 'Validation error.' })
     }
+
+    const { email, password } = req.body
+
+    const user = await verifyUserExists(email)
+
+    if (!user) {
+      return res.status(401).json({ error: 'Email not exists.' })
+    }
+
+    if (!(await user.checkPassword(password))) {
+      return res.status(401).json({ error: 'Password does not match.' })
+    }
+
+    const { id, name } = user
+
+    return res.status(200).json({
+      user: {
+        id,
+        name,
+        email,
+      },
+      token: jwt.sign({ id }, authConfig.secret, {
+        expiresIn: authConfig.expiresIn,
+      }),
+    })
+  }
 }
 
 export default new SessionController()

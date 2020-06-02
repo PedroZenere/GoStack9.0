@@ -6,29 +6,34 @@ const verifyDeliveryExists = async (compEmail) => {
   return Deliveryman.findOne({ where: { email: compEmail } })
 }
 
-// TODO: Verificar se o token recebido é de um adm
-
 class DeliverymanController {
   // Feito
   async index(req, res) {
     const deliverymans = await Deliveryman.findAll({
-      attributes: ['name', 'email'],
+      attributes: ['id', 'name', 'email'],
       include: [
         {
           model: File,
-          attributes: ['name', 'path', 'url'],
+          as: 'avatar',
+          attributes: ['id', 'path', 'url'],
         },
       ],
     })
     return res.json(deliverymans)
   }
 
-  // TODO: Colocar foto do entregador
+  /* TODO: Colocar foto do entregador: Resolvido: FileController adicionado.
+    O avatar do entregador será feito pela requisição Files
+    O relacionamento de Id's está sendo feito no index do DataBase
+    O controller não precisa saber que isso está acontecendo
+  */
+
+  // Feito
   async store(req, res) {
     // Validando os dados
     const schema = Yup.object().shape({
       name: Yup.string().required(),
-      email: Yup.email().required(),
+      email: Yup.string().email().required(),
     })
 
     if (!(await schema.isValid(req.body))) {
@@ -37,9 +42,9 @@ class DeliverymanController {
     // Valida email
     const { email } = req.body
 
-    const validEmail = await verifyDeliveryExists(email)
+    const deliverymanExists = await verifyDeliveryExists(email)
 
-    if (!validEmail) {
+    if (deliverymanExists) {
       return res.status(400).json({ error: 'Email already exists' })
     }
 
@@ -51,11 +56,14 @@ class DeliverymanController {
     })
   }
 
-  // Feito
+  /** Feito -- Não está alterando nome. Talvez mudar para procurar
+  pelo id funcione
+  */
   async update(req, res) {
     const schema = Yup.object().shape({
       name: Yup.string(),
       email: Yup.string().email(),
+      avatar_id: Yup.number(),
     })
 
     if (!(await schema.isValid(req.body))) {
@@ -64,19 +72,36 @@ class DeliverymanController {
 
     const { email } = req.body
 
-    const deliveryman = await Deliveryman.findByPk(req.body.id)
+    const deliveryman = await Deliveryman.findOne({
+      where: { email },
+    })
+
+    if (!deliveryman) {
+      return res.status(400).json({ error: 'Deliveryman not found.' })
+    }
 
     if (email) {
       if (email !== deliveryman.email) {
         const validEmail = await verifyDeliveryExists(email)
-
         if (validEmail) {
           return res.status(400).json({ error: 'Email already exists' })
         }
       }
     }
 
-    const { id, name } = await Deliveryman.update(req.body)
+    // Verifica se ja existe o avatar a ser setado
+    const { avatar_id } = req.body
+    if (avatar_id) {
+      const findAvatar = await File.findOne({
+        where: { id: avatar_id },
+      })
+
+      if (!findAvatar) {
+        return res.status(400).json({ error: 'Avatar not load' })
+      }
+    }
+
+    const { id, name } = await deliveryman.update(req.body)
 
     return res.json({
       id,
@@ -85,18 +110,19 @@ class DeliverymanController {
     })
   }
 
+  // Feito
   async delete(req, res) {
-    const deliveryman = await Deliveryman.findByPk(req.params.id, {
-      include: [
-        {
-          attributes: ['name', 'email'],
-        },
-      ],
+    const { id, name, email } = await Deliveryman.findByPk(req.params.id)
+
+    await Deliveryman.destroy({
+      where: { id: req.params.id },
     })
 
-    await Deliveryman.delete(deliveryman.id)
-
-    return res.json(deliveryman)
+    return res.json({
+      id,
+      name,
+      email,
+    })
   }
 }
 

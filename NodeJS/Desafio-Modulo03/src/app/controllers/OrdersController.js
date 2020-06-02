@@ -8,49 +8,53 @@ class OrdersController {
   async index(req, res) {
     const { page = 1 } = req.query
     const orders = await Orders.findAll({
-      where: {
-        canceled_at: null,
-        attributes: ['id', 'recipient_id', 'deliveryman_id', 'product'],
-        limit: 20,
-        offset: (page - 1) * 20,
-        include: [
-          {
-            model: Recipients,
-            as: 'recipients',
-            attributes: [
-              'nome',
-              'rua',
-              'numero',
-              'complemento',
-              'estado',
-              'cidade',
-              'cep',
-            ],
-          },
-          {
-            model: Deliveryman,
-            as: 'deliveryman',
-            attribute: ['id', 'name', 'email'],
-            include: [
-              {
-                model: File,
-                as: 'avatar',
-                attributes: ['id', 'path', 'url'],
-              },
-            ],
-          },
-        ],
-      },
+      where: { canceled_at: null },
+      limit: 20,
+      offset: (page - 1) * 20,
+      attributes: ['id', 'recipient_id', 'deliveryman_id', 'product'],
+      include: [
+        {
+          model: Recipients,
+          as: 'recipient',
+          attributes: [
+            'id',
+            'nome',
+            'rua',
+            'numero',
+            'complemento',
+            'estado',
+            'cidade',
+            'cep',
+          ],
+        },
+        {
+          model: Deliveryman,
+          as: 'deliveryman',
+          attribute: ['id', 'name', 'email'],
+          include: [
+            {
+              model: File,
+              as: 'avatar',
+              attributes: ['id', 'path', 'url'],
+            },
+          ],
+        },
+      ],
     })
 
     return res.json(orders)
   }
 
+  /**
+{
+            
+           
+   */
+
   async store(req, res) {
     const schema = Yup.object().shape({
       recipient_id: Yup.number().required(),
       deliveryman_id: Yup.number().required(),
-      signature_id: Yup.number(),
       product: Yup.string().required(),
     })
 
@@ -61,7 +65,7 @@ class OrdersController {
     // Checar se o id do recipient e do deliveryman existe
     const { recipient_id, deliveryman_id, product } = req.body
 
-    const isRecipient = await Recipients.findOnde({
+    const isRecipient = await Recipients.findOne({
       where: {
         id: recipient_id,
       },
