@@ -11,6 +11,8 @@ import DeliverymanController from './app/controllers/DeliverymanController'
 import OrdersController from './app/controllers/OrdersController'
 import SingleordersController from './app/controllers/SingleordersController'
 import DeliveredOrdersController from './app/controllers/DeliveredOrdersController'
+import StatusOrdersController from './app/controllers/StatusOrdersController'
+import DeliveryProblems from './app/controllers/DeliveryProblemsController'
 
 import authMiddleware from './app/middleware/auth'
 
@@ -49,5 +51,15 @@ routes.delete('/orders', OrdersController.store)
 routes.get('/singleorders/:id', SingleordersController.index)
 
 routes.get('/deliveryman/:id/deliveries', DeliveredOrdersController.index)
+
+routes.put(
+  '/deliveryman/:idDeliveryman/start',
+  StatusOrdersController.updateStart
+)
+routes.put('/deliveryman/:idDeliveryman/end', StatusOrdersController.updateEnd)
+
+routes.get('/delivery/:idOrder/problems', DeliveryProblems.index)
+routes.post('/delivery/:idDeliveryman/problems', DeliveryProblems.store)
+routes.delete('/delivery/:idProblem/problems', DeliveryProblems.delete)
 
 module.exports = routes

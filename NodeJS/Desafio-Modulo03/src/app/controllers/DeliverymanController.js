@@ -57,7 +57,7 @@ class DeliverymanController {
   }
 
   /** Feito -- Não está alterando nome. Talvez mudar para procurar
-  pelo id funcione
+  pelo id funcione - Resolvido -- Altera informando o email
   */
   async update(req, res) {
     const schema = Yup.object().shape({
