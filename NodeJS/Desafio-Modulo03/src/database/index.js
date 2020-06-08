@@ -7,12 +7,21 @@ import File from '../app/models/File'
 import Filesignature from '../app/models/Filesignature'
 import Deliveryman from '../app/models/Deliveryman'
 import Orders from '../app/models/Orders'
+import DeliveryProblems from '../app/models/DeliveryProblems'
 
 // Importando a configuração de acesso ao banco
 import databaseconfig from '../config/database'
 
 // Colocando num array todos os registros de cada arquivo dos models
-const models = [User, Recipients, Deliveryman, File, Orders, Filesignature]
+const models = [
+  User,
+  Recipients,
+  Deliveryman,
+  File,
+  Orders,
+  Filesignature,
+  DeliveryProblems,
+]
 
 class Database {
   constructor() {
