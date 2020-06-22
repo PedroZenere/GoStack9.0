@@ -8,8 +8,17 @@ export const Form = styled.form`
   input {
     flex: 1;
     border: 1px solid #eee;
+    border-radius: 10px;
     padding: 10px 15px;
     font-size: 16px;
+
+    ${(props) =>
+      props.error &&
+      css`
+         {
+          border-color: #f00;
+        }
+      `}
   }
 `;
 
@@ -69,7 +78,7 @@ export const List = styled.ul`
     button {
       position: absolute;
       right: 1px;
-      margin-right: 305px;
+      margin-right: 310px;
     }
 
     a {

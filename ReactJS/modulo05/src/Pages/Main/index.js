@@ -15,6 +15,7 @@ class Main extends Component {
       newRepo: '',
       repositories: [],
       loading: false,
+      error: false,
     };
   }
 
@@ -47,23 +48,33 @@ class Main extends Component {
 
     const { newRepo, repositories } = this.state;
 
-    let response;
-
     try {
-      response = await api.get(`/repos/${newRepo}`);
+      const search = repositories.find((r) => {
+        return r.name === newRepo;
+      });
+
+      if (search) {
+        throw new Error('Repositório duplicado');
+      }
+
+      const response = await api.get(`/repos/${newRepo}`);
+
+      const data = {
+        name: response.data.full_name,
+      };
+
+      this.setState({
+        repositories: [...repositories, data],
+        newRepo: '',
+        loading: false,
+        error: false,
+      });
     } catch (err) {
-      alert('Repository not found');
+      this.setState({
+        loading: false,
+        error: true,
+      });
     }
-
-    const data = {
-      name: response.data.full_name,
-    };
-
-    this.setState({
-      repositories: [...repositories, data],
-      newRepo: '',
-      loading: false,
-    });
   };
 
   handleDeleteOption = (repository) => {
@@ -75,7 +86,7 @@ class Main extends Component {
   };
 
   render() {
-    const { newRepo, repositories, loading } = this.state;
+    const { newRepo, repositories, loading, error } = this.state;
 
     return (
       <Container>
@@ -84,7 +95,7 @@ class Main extends Component {
           Repositorios
         </h1>
 
-        <Form onSubmit={this.handleSubmit}>
+        <Form onSubmit={this.handleSubmit} error={error}>
           <input
             type="text"
             placeholder="Adicionar Repositório"

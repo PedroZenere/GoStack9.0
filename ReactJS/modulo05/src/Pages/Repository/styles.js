@@ -40,6 +40,28 @@ export const Owner = styled.header`
     text-align: center;
     max-width: 400px;
   }
+
+  div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    button {
+      height: 30px;
+      width: 60px;
+      background: #7159c1;
+      border-radius: 4px;
+      border: 1px solid #dcdce6;
+      font-weight: bold;
+      margin-top: 10px;
+      margin-left: 16px;
+      transition: border-color 0.2s;
+    }
+
+    button:hover {
+      border-color: #999;
+    }
+  }
 `;
 
 export const IssueList = styled.ul`
@@ -99,5 +121,28 @@ export const IssueList = styled.ul`
         color: #999;
       }
     }
+  }
+`;
+
+export const ButtonPage = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+
+  button {
+    height: 30px;
+    width: 80px;
+    background: #7159c1;
+    border-radius: 4px;
+    border: 1px solid #dcdce6;
+    font-weight: bold;
+    margin-top: 10px;
+    margin-left: 16px;
+    transition: border-color 0.2s;
+  }
+
+  button:hover {
+    border-color: #999;
   }
 `;
