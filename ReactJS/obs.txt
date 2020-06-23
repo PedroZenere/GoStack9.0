@@ -1,0 +1,5 @@
+Para rodar servidor json-server: (instar json-server)
+
+json-server {nome_arquivo} -p {porta}
+
+json-server server.json -p 3333
