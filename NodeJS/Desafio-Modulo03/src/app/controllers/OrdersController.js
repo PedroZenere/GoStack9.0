@@ -1,4 +1,5 @@
 import * as Yup from 'yup'
+import { Op } from 'sequelize'
 import Orders from '../models/Orders'
 import Recipients from '../models/Recipients'
 import Deliveryman from '../models/Deliveryman'
@@ -8,48 +9,113 @@ import Mail from '../../lib/Mail'
 
 class OrdersController {
   async index(req, res) {
+    const { q } = req.query
+    console.log('Params: ', q)
     const { page = 1 } = req.query
-    const orders = await Orders.findAll({
-      where: { canceled_at: null },
-      limit: 20,
-      offset: (page - 1) * 20,
-      attributes: ['id', 'recipient_id', 'deliveryman_id', 'product'],
-      include: [
-        {
-          model: Recipients,
-          as: 'recipient',
-          attributes: [
-            'id',
-            'nome',
-            'rua',
-            'numero',
-            'complemento',
-            'estado',
-            'cidade',
-            'cep',
-          ],
-          include: [
-            {
-              model: Filesignature,
-              as: 'signature',
-              attributes: ['id', 'path', 'url'],
-            },
-          ],
+    let orders
+
+    if (q) {
+      orders = await Orders.findAll({
+        where: {
+          product: { [Op.iLike]: `%${q}%` },
         },
-        {
-          model: Deliveryman,
-          as: 'deliveryman',
-          attribute: ['id', 'name', 'email'],
-          include: [
-            {
-              model: File,
-              as: 'avatar',
-              attributes: ['id', 'path', 'url'],
-            },
-          ],
-        },
-      ],
-    })
+        limit: 20,
+        offset: (page - 1) * 20,
+        attributes: [
+          'id',
+          'recipient_id',
+          'deliveryman_id',
+          'product',
+          'canceled_at',
+          'start_date',
+          'end_date',
+        ],
+        include: [
+          {
+            model: Recipients,
+            as: 'recipient',
+            attributes: [
+              'id',
+              'nome',
+              'rua',
+              'numero',
+              'complemento',
+              'estado',
+              'cidade',
+              'cep',
+            ],
+            include: [
+              {
+                model: Filesignature,
+                as: 'signature',
+                attributes: ['id', 'path', 'url'],
+              },
+            ],
+          },
+          {
+            model: Deliveryman,
+            as: 'deliveryman',
+            attribute: ['id', 'name', 'email'],
+            include: [
+              {
+                model: File,
+                as: 'avatar',
+                attributes: ['id', 'path', 'url'],
+              },
+            ],
+          },
+        ],
+      })
+    } else {
+      orders = await Orders.findAll({
+        limit: 20,
+        offset: (page - 1) * 20,
+        attributes: [
+          'id',
+          'recipient_id',
+          'deliveryman_id',
+          'product',
+          'canceled_at',
+          'start_date',
+          'end_date',
+        ],
+        include: [
+          {
+            model: Recipients,
+            as: 'recipient',
+            attributes: [
+              'id',
+              'nome',
+              'rua',
+              'numero',
+              'complemento',
+              'estado',
+              'cidade',
+              'cep',
+            ],
+            include: [
+              {
+                model: Filesignature,
+                as: 'signature',
+                attributes: ['id', 'path', 'url'],
+              },
+            ],
+          },
+          {
+            model: Deliveryman,
+            as: 'deliveryman',
+            attribute: ['id', 'name', 'email'],
+            include: [
+              {
+                model: File,
+                as: 'avatar',
+                attributes: ['id', 'path', 'url'],
+              },
+            ],
+          },
+        ],
+      })
+    }
 
     return res.json(orders)
   }
@@ -157,7 +223,19 @@ class OrdersController {
   }
 
   async delete(req, res) {
-    return res.json()
+    const { id } = req.params
+
+    const orders = await Orders.findByPk(id)
+
+    if (!orders) {
+      return res.status(400).json({ error: 'order not found' })
+    }
+
+    await Orders.destroy({
+      where: { id },
+    })
+
+    return res.json({ orders })
   }
 }
 

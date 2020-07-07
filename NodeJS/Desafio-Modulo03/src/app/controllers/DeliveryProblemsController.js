@@ -5,10 +5,7 @@ import Deliveryman from '../models/Deliveryman'
 
 class DeliveryProblemsController {
   async index(req, res) {
-    const { idOrder } = req.params
-
     const deliveryProblem = await DeliveryProblems.findAll({
-      where: { delivery_id: idOrder },
       include: [
         {
           model: Orders,

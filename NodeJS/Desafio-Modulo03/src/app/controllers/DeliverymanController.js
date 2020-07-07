@@ -1,4 +1,5 @@
 import * as Yup from 'yup'
+import { Op } from 'sequelize'
 import Deliveryman from '../models/Deliveryman'
 import File from '../models/File'
 
@@ -9,16 +10,34 @@ const verifyDeliveryExists = async (compEmail) => {
 class DeliverymanController {
   // Feito
   async index(req, res) {
-    const deliverymans = await Deliveryman.findAll({
-      attributes: ['id', 'name', 'email'],
-      include: [
-        {
-          model: File,
-          as: 'avatar',
-          attributes: ['id', 'path', 'url'],
+    const { q } = req.query
+    let deliverymans
+    if (q) {
+      deliverymans = await Deliveryman.findAll({
+        where: {
+          name: { [Op.iLike]: `%${q}%` },
         },
-      ],
-    })
+        attributes: ['id', 'name', 'email'],
+        include: [
+          {
+            model: File,
+            as: 'avatar',
+            attributes: ['id', 'path', 'url'],
+          },
+        ],
+      })
+    } else {
+      deliverymans = await Deliveryman.findAll({
+        attributes: ['id', 'name', 'email'],
+        include: [
+          {
+            model: File,
+            as: 'avatar',
+            attributes: ['id', 'path', 'url'],
+          },
+        ],
+      })
+    }
     return res.json(deliverymans)
   }
 

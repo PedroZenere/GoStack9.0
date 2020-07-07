@@ -46,7 +46,7 @@ routes.post(
 routes.get('/orders', OrdersController.index)
 routes.post('/orders', OrdersController.store)
 routes.put('/orders', OrdersController.store)
-routes.delete('/orders', OrdersController.store)
+routes.delete('/orders/:id', OrdersController.delete)
 
 routes.get('/singleorders/:id', SingleordersController.index)
 
@@ -58,7 +58,7 @@ routes.put(
 )
 routes.put('/deliveryman/:idDeliveryman/end', StatusOrdersController.updateEnd)
 
-routes.get('/delivery/:idOrder/problems', DeliveryProblems.index)
+routes.get('/problems', DeliveryProblems.index)
 routes.post('/delivery/:idDeliveryman/problems', DeliveryProblems.store)
 routes.delete('/delivery/:idProblem/problems', DeliveryProblems.delete)
 

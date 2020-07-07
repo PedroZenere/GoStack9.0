@@ -3,16 +3,13 @@ import { promisify } from 'util'
 import authConfig from '../../config/auth'
 
 export default async (req, res, next) => {
-  /**
-  if (!req.headers.authorization) {
-    return res.status(401).json({ error: 'Token required' })
-  }
-  */
-  const [, token] = req.headers.authorization.split(' ')
+  const authHeader = req.headers.authorization;
 
-  if (!req.headers.authorization) {
-    return res.status(401).json({ error: 'Token not provided' })
+  if (!authHeader) {
+    return res.status(401).json({ error: 'Token not provided.' });
   }
+
+  const [, token] = authHeader.split(' ');
 
   try {
     const decoded = await promisify(jwt.verify)(token, authConfig.secret)

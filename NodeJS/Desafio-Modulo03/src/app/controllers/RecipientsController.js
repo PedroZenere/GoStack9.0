@@ -1,28 +1,57 @@
 import * as Yup from 'yup'
+import { Op } from 'sequelize'
 import Recipients from '../models/Recipients'
 import Filesignature from '../models/Filesignature'
 
 class RecipientsController {
   async index(req, res) {
-    const recipients = await Recipients.findAll({
-      attributes: [
-        'id',
-        'nome',
-        'rua',
-        'numero',
-        'complemento',
-        'estado',
-        'cidade',
-        'cep',
-      ],
-      include: [
-        {
-          model: Filesignature,
-          as: 'signature',
-          attributes: ['id', 'path', 'url'],
+    const { q } = req.query
+    let recipients
+
+    if (q) {
+      recipients = await Recipients.findAll({
+        where: {
+          nome: { [Op.iLike]: `%${q}%` },
         },
-      ],
-    })
+        attributes: [
+          'id',
+          'nome',
+          'rua',
+          'numero',
+          'complemento',
+          'estado',
+          'cidade',
+          'cep',
+        ],
+        include: [
+          {
+            model: Filesignature,
+            as: 'signature',
+            attributes: ['id', 'path', 'url'],
+          },
+        ],
+      })
+    } else {
+      recipients = await Recipients.findAll({
+        attributes: [
+          'id',
+          'nome',
+          'rua',
+          'numero',
+          'complemento',
+          'estado',
+          'cidade',
+          'cep',
+        ],
+        include: [
+          {
+            model: Filesignature,
+            as: 'signature',
+            attributes: ['id', 'path', 'url'],
+          },
+        ],
+      })
+    }
 
     return res.json(recipients)
   }
