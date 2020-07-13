@@ -10,8 +10,17 @@ import Deliverymans from '../Pages/Deliverymans';
 import Recipients from '../Pages/Recipients';
 import Problems from '../Pages/Problems';
 
-// Cadastro
+// Orders
 import CadastroOrders from '../Pages/Orders/Cadastro';
+import EdicaoOrders from '../Pages/Orders/Edicao';
+
+// Deliverymans
+import CadastroDeliverymans from '../Pages/Deliverymans/Cadastro';
+import EdicaoDeliverymans from '../Pages/Deliverymans/Edicao';
+
+// Recipients
+import CadastroRecipients from '../Pages/Recipients/Cadastro';
+import EdicaoRecipients from '../Pages/Recipients/Edicao';
 
 export default function Routes() {
   return (
@@ -24,6 +33,21 @@ export default function Routes() {
       <Route path="/problems" component={Problems} isPrivate />
 
       <Route path="/cadorders" component={CadastroOrders} isPrivate />
+      <Route path="/ediorders/:id" component={EdicaoOrders} isPrivate />
+
+      <Route
+        path="/caddeliverymans"
+        component={CadastroDeliverymans}
+        isPrivate
+      />
+      <Route
+        path="/edideliverymans/:id"
+        component={EdicaoDeliverymans}
+        isPrivate
+      />
+
+      <Route path="/cadrecipients" component={CadastroRecipients} isPrivate />
+      <Route path="/edirecipients/:id" component={EdicaoRecipients} isPrivate />
     </Switch>
   );
 }

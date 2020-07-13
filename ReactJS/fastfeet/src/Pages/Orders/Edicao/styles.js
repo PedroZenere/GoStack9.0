@@ -142,6 +142,7 @@ export const NomeProd = styled.div`
     height: 45px;
     border: 1px solid #dddddd;
     border-radius: 4px;
+    margin-bottom: 20px;
     padding: 0 10px;
   }
 `;

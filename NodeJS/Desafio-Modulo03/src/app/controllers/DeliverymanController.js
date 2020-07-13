@@ -89,10 +89,12 @@ class DeliverymanController {
       return res.status(400).json({ error: 'Validation fails.' })
     }
 
+    const { id } = req.params
     const { email } = req.body
 
+
     const deliveryman = await Deliveryman.findOne({
-      where: { email },
+      where: { id },
     })
 
     if (!deliveryman) {
@@ -120,7 +122,7 @@ class DeliverymanController {
       }
     }
 
-    const { id, name } = await deliveryman.update(req.body)
+    const { name } = await deliveryman.update(req.body)
 
     return res.json({
       id,

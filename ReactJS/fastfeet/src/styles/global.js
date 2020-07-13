@@ -27,7 +27,8 @@ export default createGlobalStyle`
     max-width: 1440px;
     margin: 0 auto;
     padding: 0 50px;
-
+    height: 100%;
+    width: 100%;
   }
 
   body, input, button {

@@ -32,7 +32,7 @@ routes.delete('/recipients/:id', RecipientsController.delete)
 
 routes.get('/deliveryman', DeliverymanController.index)
 routes.post('/deliveryman', DeliverymanController.store)
-routes.put('/deliveryman', DeliverymanController.update)
+routes.put('/deliveryman/:id', DeliverymanController.update)
 routes.delete('/deliveryman/:id', DeliverymanController.delete)
 
 routes.post('/files', upload.single('file'), FileController.store)
@@ -45,7 +45,7 @@ routes.post(
 // TODO: Arrumar rotas de put e delete
 routes.get('/orders', OrdersController.index)
 routes.post('/orders', OrdersController.store)
-routes.put('/orders', OrdersController.store)
+routes.put('/orders/:id', OrdersController.update)
 routes.delete('/orders/:id', OrdersController.delete)
 
 routes.get('/singleorders/:id', SingleordersController.index)

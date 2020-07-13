@@ -46,7 +46,7 @@ export const Button = styled.div`
   display: block;
   margin: 0 auto;
 
-  button {
+  a {
     margin-top: 45px;
     background: #7d40e7;
     border-radius: 4px;
@@ -96,10 +96,19 @@ export const OrderTable = styled.table`
     background: #fff;
     border-bottom: 1px solid #eee;
 
+    div {
+      text-align: center;
+
+      img {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+      }
+    }
+
     button {
       background: none;
       border: 0;
-      margin-left: 20px;
     }
   }
 

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { FiPlus } from 'react-icons/fi';
@@ -21,21 +21,28 @@ import {
 } from './styles';
 
 export default function Orders() {
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(false);
+
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    function loadOrders() {
-      dispatch(OrderRequest());
-    }
+  const ord = useSelector((state) => state.order);
 
-    loadOrders();
-  }, [dispatch]);
+  useEffect(() => {
+    // console.log('Executei?');
+    dispatch(OrderRequest());
+
+    setOrders(ord);
+    if (ord) {
+      setLoading(true);
+    }
+  }, [dispatch, ord]);
 
   async function handleFilter(e) {
     dispatch(OrderRequestFilter(e.target.value));
   }
 
-  const orders = useSelector((state) => state.order);
+  // console.log('Orders: ', orders);
 
   function handleStatusColorButton(status) {
     switch (status) {
@@ -63,84 +70,115 @@ export default function Orders() {
     }
   }
 
-  return (
-    <Container>
-      <Manager>
-        <strong>Gerenciando encomendas</strong>
+  if (!loading) {
+    return (
+      <Container>
+        <Manager>
+          <strong>Gerenciando encomendas</strong>
 
-        <Teste>
-          <div>
-            <Input
-              onChange={handleFilter}
-              name="search"
-              placeholder="Buscar por encomendas"
-            />
-          </div>
+          <Teste>
+            <div>
+              <Input
+                onChange={handleFilter}
+                name="search"
+                placeholder="Buscar por encomendas"
+              />
+            </div>
 
-          <aside>
-            <Button>
-              <Link to="/cadorders">
-                <div>
-                  <FiPlus size={20} color="#FFFF" />
-                </div>
-                <strong>CADASTRAR</strong>
-              </Link>
-            </Button>
-          </aside>
-        </Teste>
-      </Manager>
-      <OrderTable>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Destinatário</th>
-            <th>Entregador</th>
-            <th>Cidade</th>
-            <th>Estado</th>
-            <th>Status</th>
-            <th>Ações</th>
-          </tr>
-        </thead>
-        <tbody>
-          {orders.map((product) => (
-            <tr key={product.id}>
-              <td>
-                <span>#{product.id}</span>
-              </td>
-              <td>
-                <span>{product.recipient.nome}</span>
-              </td>
-              <td>
-                <div>
-                  <span>{product.deliveryman.name}</span>
-                </div>
-              </td>
-              <td>
-                <span>{product.recipient.cidade}</span>
-              </td>
-              <td>
-                <span>{product.recipient.estado}</span>
-              </td>
-              <td>
-                <Status
-                  statusButton={handleStatusColorButton(product.status)}
-                  statusFont={handleStatusColorFont(product.status)}
-                >
-                  <button type="button">
-                    <div />
-                    {product.status}
-                  </button>
-                </Status>
-              </td>
-              <td>
-                <div>
-                  <ButtonList idProd={product.id} />
-                </div>
-              </td>
+            <aside>
+              <Button>
+                <Link to="/cadorders">
+                  <div>
+                    <FiPlus size={20} color="#FFFF" />
+                  </div>
+                  <strong>CADASTRAR</strong>
+                </Link>
+              </Button>
+            </aside>
+          </Teste>
+        </Manager>
+      </Container>
+    );
+  } else {
+    return (
+      <Container>
+        <Manager>
+          <strong>Gerenciando encomendas</strong>
+
+          <Teste>
+            <div>
+              <Input
+                onChange={handleFilter}
+                name="search"
+                placeholder="Buscar por encomendas"
+              />
+            </div>
+
+            <aside>
+              <Button>
+                <Link to="/cadorders">
+                  <div>
+                    <FiPlus size={20} color="#FFFF" />
+                  </div>
+                  <strong>CADASTRAR</strong>
+                </Link>
+              </Button>
+            </aside>
+          </Teste>
+        </Manager>
+        <OrderTable>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Destinatário</th>
+              <th>Entregador</th>
+              <th>Cidade</th>
+              <th>Estado</th>
+              <th>Status</th>
+              <th>Ações</th>
             </tr>
-          ))}
-        </tbody>
-      </OrderTable>
-    </Container>
-  );
+          </thead>
+          <tbody>
+            {orders.map((product) => (
+              <tr key={product.id}>
+                <td>
+                  <span>#{product.id}</span>
+                </td>
+                <td>
+                  <span>{product.recipient.nome}</span>
+                </td>
+                <td>
+                  <div>
+                    <span>{product.deliveryman.name || 'Sem entregador'}</span>
+                  </div>
+                </td>
+                <td>
+                  <span>{product.recipient.cidade}</span>
+                </td>
+                <td>
+                  <span>{product.recipient.estado}</span>
+                </td>
+                <td>
+                  <Status
+                    statusButton={handleStatusColorButton(product.status)}
+                    statusFont={handleStatusColorFont(product.status)}
+                  >
+                    <button type="button">
+                      <div />
+                      {product.status}
+                    </button>
+                  </Status>
+                </td>
+                <td>
+                  <div>
+                    <ButtonList idProd={product.id} />
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </OrderTable>
+      </Container>
+    );
+  }
 }

@@ -1,26 +1,26 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { FiEye, FiEdit2, FiTrash2, FiMoreHorizontal } from 'react-icons/fi';
+import { FiEdit2, FiTrash2, FiMoreHorizontal } from 'react-icons/fi';
 
-import { removeOrderRequest } from '../../store/modules/order/actions';
+import { removeRecipientRequest } from '../../store/modules/recipient/action';
 
 import { Badge, Container, ButtonList, Scroll, Button } from './styles';
 
-function ButtonsOrder({ idProd }) {
+function ButtonsRecipient({ idRecip }) {
   const [visible, setVisible] = useState(false);
   const dispatch = useDispatch();
 
-  console.log('Product: ', idProd);
+  // console.log('Delivery: ', idRecip);
 
   function handleToggleVisible() {
     setVisible(!visible);
   }
 
-  async function handleDeleteOrder(id) {
-    console.log('ID: ', id);
+  async function handleDeleteRecipient(id) {
+    // console.log('ID: ', id);
 
-    dispatch(removeOrderRequest(id));
+    dispatch(removeRecipientRequest(id));
   }
 
   return (
@@ -33,16 +33,8 @@ function ButtonsOrder({ idProd }) {
       <ButtonList visible={visible}>
         <Scroll>
           <Button>
-            <li key={idProd}>
-              <Link to="/orderview">
-                <div>
-                  <FiEye size={14} color="#8E5BE8" />
-                </div>
-                Visualizar
-              </Link>
-            </li>
-            <li>
-              <Link to={`/ediorders/${idProd}`}>
+            <li key={idRecip}>
+              <Link to={`/edirecipients/${idRecip}`}>
                 <div>
                   <FiEdit2 size={14} color="#4D85EE" />
                 </div>
@@ -50,7 +42,10 @@ function ButtonsOrder({ idProd }) {
               </Link>
             </li>
             <li>
-              <button type="button" onClick={() => handleDeleteOrder(idProd)}>
+              <button
+                type="button"
+                onClick={() => handleDeleteRecipient(idRecip)}
+              >
                 <div>
                   <FiTrash2 size={14} color="#DE3B3B" />
                 </div>
@@ -64,4 +59,4 @@ function ButtonsOrder({ idProd }) {
   );
 }
 
-export default ButtonsOrder;
+export default ButtonsRecipient;

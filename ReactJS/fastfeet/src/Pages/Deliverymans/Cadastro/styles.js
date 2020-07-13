@@ -98,17 +98,17 @@ export const Dados = styled.div`
   width: 100%;
   padding: 0 30px;
   background: #fff;
+  margin-top: 30px;
 
   div {
-    display: flex;
-    margin-top: 30px;
-    justify-content: space-between;
+    display: block;
 
     div {
       display: block;
       margin-right: 30px;
 
       p {
+        margin-top: 10px;
         color: #444444;
         font-size: 14px;
         margin-bottom: 10px;
@@ -116,32 +116,22 @@ export const Dados = styled.div`
       }
 
       input {
-        width: 405px;
+        width: 840px;
         height: 45px;
         border: 1px solid #dddddd;
         border-radius: 4px;
         padding: 0 10px;
+        margin-bottom: 10px;
       }
     }
   }
 `;
 
-export const NomeProd = styled.div`
+export const Avatar = styled.div`
   display: flex;
-  flex-direction: column;
-
-  p {
-    color: #444444;
-    font-size: 14px;
-    margin-bottom: 10px;
-    font-weight: bold;
-  }
-
-  input {
-    width: 405px;
-    height: 45px;
-    border: 1px solid #dddddd;
-    border-radius: 4px;
-    padding: 0 10px;
-  }
+  padding: 0 30px;
+  background: #fff;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
 `;

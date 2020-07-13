@@ -1,39 +1,43 @@
 import produce from 'immer';
 
-export default function orders(state = [], action) {
+export default function deliveryman(state = [], action) {
   switch (action.type) {
-    case '@order/ORDER_SUCCESS':
+    case '@deliveryman/DELIVERYMAN_SUCCESS':
       return produce(state, (draft) => {
         draft.splice(0);
         // console.log('OrdRed: ', action.payload);
         draft.push(...action.payload);
         // draft.order.push(action.payload);
       });
-    case '@order/ORDER_FILTER_SUCCESS':
+    case '@deliveryman/DELIVERYMAN_FILTER_SUCCESS':
       return produce(state, (draft) => {
         // console.log('OrdRed: ', action.payload);
         draft.splice(0);
         draft.push(...action.payload);
         // draft.order.push(action.payload);
       });
-    case '@order/ORDER_INSERT_SUCCESS':
+    case '@deliveryman/DELIVERYMAN_INSERT_SUCCESS':
       return produce(state, (draft) => {
         draft.push(...action.payload);
       });
-    case '@order/ORDER_UPDATE_SUCCESS':
+    case '@deliveryman/DELIVERYMAN_UPDATE_SUCCESS':
       return produce(state, (draft) => {
-        const orderIndex = draft.findIndex((o) => o.id === action.payload.id);
+        const deliveryIndex = draft.findIndex(
+          (d) => d.id === action.payload.id
+        );
         // console.log('orderIndex: ', orderIndex);
         // console.log('AcPay: ', action.payload);
 
-        draft[orderIndex] = action.payload;
+        draft[deliveryIndex] = action.payload;
       });
-    case '@order/ORDER_REMOVE_SUCCESS':
+    case '@deliveryman/DELIVERYMAN_REMOVE_SUCCESS':
       return produce(state, (draft) => {
-        const orderIndex = draft.findIndex((o) => o.id === action.payload.id);
+        const deliveryIndex = draft.findIndex(
+          (d) => d.id === action.payload.id
+        );
 
-        if (orderIndex >= 0) {
-          draft.splice(orderIndex, 1);
+        if (deliveryIndex >= 0) {
+          draft.splice(deliveryIndex, 1);
         }
       });
     default:

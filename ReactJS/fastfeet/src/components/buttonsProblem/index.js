@@ -1,26 +1,24 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { FiEye, FiEdit2, FiTrash2, FiMoreHorizontal } from 'react-icons/fi';
+import { FiEye, FiTrash2, FiMoreHorizontal } from 'react-icons/fi';
 
-import { removeOrderRequest } from '../../store/modules/order/actions';
+// import { removeRecipientRequest } from '../../store/modules/recipient/action';
 
 import { Badge, Container, ButtonList, Scroll, Button } from './styles';
 
-function ButtonsOrder({ idProd }) {
+function ButtonsProblem({ idProblem }) {
   const [visible, setVisible] = useState(false);
-  const dispatch = useDispatch();
 
-  console.log('Product: ', idProd);
+  // console.log('Delivery: ', idRecip);
 
   function handleToggleVisible() {
     setVisible(!visible);
   }
 
-  async function handleDeleteOrder(id) {
+  async function handleDeleteProblem(id) {
     console.log('ID: ', id);
 
-    dispatch(removeOrderRequest(id));
+    // dispatch(removeRecipientRequest(id));
   }
 
   return (
@@ -33,8 +31,8 @@ function ButtonsOrder({ idProd }) {
       <ButtonList visible={visible}>
         <Scroll>
           <Button>
-            <li key={idProd}>
-              <Link to="/orderview">
+            <li key={idProblem}>
+              <Link to="/problemview">
                 <div>
                   <FiEye size={14} color="#8E5BE8" />
                 </div>
@@ -42,19 +40,14 @@ function ButtonsOrder({ idProd }) {
               </Link>
             </li>
             <li>
-              <Link to={`/ediorders/${idProd}`}>
-                <div>
-                  <FiEdit2 size={14} color="#4D85EE" />
-                </div>
-                Editar
-              </Link>
-            </li>
-            <li>
-              <button type="button" onClick={() => handleDeleteOrder(idProd)}>
+              <button
+                type="button"
+                onClick={() => handleDeleteProblem(idProblem)}
+              >
                 <div>
                   <FiTrash2 size={14} color="#DE3B3B" />
                 </div>
-                Excluir
+                Cancelar encomenda
               </button>
             </li>
           </Button>
@@ -64,4 +57,4 @@ function ButtonsOrder({ idProd }) {
   );
 }
 
-export default ButtonsOrder;
+export default ButtonsProblem;

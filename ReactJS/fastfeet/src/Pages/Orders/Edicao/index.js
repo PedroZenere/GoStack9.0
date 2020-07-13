@@ -1,31 +1,41 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { FiChevronLeft, FiCheck } from 'react-icons/fi';
 import { Input, Form } from '@rocketseat/unform';
 import * as Yup from 'yup';
 
-import { OrderInsertRequest } from '../../../store/modules/order/actions';
+import { OrderUpdateRequest } from '../../../store/modules/order/actions';
 
 import { Container, Manager, Buttons, Dados, NomeProd } from './styles';
 
 const schema = Yup.object().shape({
   destinatario: Yup.string().required(),
-  entregador: Yup.string().required(),
-  product: Yup.string().required(),
+  entregador: Yup.string(),
+  product: Yup.string(),
 });
 
-function Cadastro() {
+function Edicao({ match }) {
+  const { id } = match.params;
+
+  const order = useSelector((state) => state.order);
+
+  const singleOrder = order.find((ord) => {
+    return ord.id === Number(id);
+  });
+
   const dispatch = useDispatch();
 
   function handleSubmit({ destinatario, entregador, product }) {
-    dispatch(OrderInsertRequest(destinatario, entregador, product));
+    // console.log('dest: ', destinatario);
+
+    dispatch(OrderUpdateRequest(Number(id), destinatario, entregador, product));
   }
   return (
     <Container>
       <Manager>
         <div>
-          <strong>Cadastro de encomendas</strong>
+          <strong>Edição de encomendas</strong>
         </div>
 
         <Buttons>
@@ -46,12 +56,21 @@ function Cadastro() {
         </Buttons>
       </Manager>
 
-      <Form id="myform" schema={schema} onSubmit={handleSubmit}>
+      <Form
+        initialData={{
+          destinatario: singleOrder.recipient.nome,
+          entregador: singleOrder.deliveryman.name,
+          product: singleOrder.product,
+        }}
+        id="myform"
+        schema={schema}
+        onSubmit={handleSubmit}
+      >
         <Dados>
           <div>
             <div>
               <p>Destinatário</p>
-              <Input name="destinatario" type="text" />
+              <Input name="destinatario" type="text" id="dest" />
             </div>
             <div>
               <p>Entregador</p>
@@ -68,4 +87,4 @@ function Cadastro() {
   );
 }
 
-export default Cadastro;
+export default Edicao;

@@ -186,7 +186,10 @@ class OrdersController {
       return res.status(400).json({ error: 'Validation failed' })
     }
 
-    const { id } = req.params.id
+    const { id } = req.params
+    console.log('Dados recebidos')
+    console.log('iD: ', id);
+    
 
     const orders = await Orders.findByPk(id)
 
@@ -194,8 +197,14 @@ class OrdersController {
       return res.status(400).json({ error: 'Order not found' })
     }
 
+    console.log('Pass1');
+
     // Checar se o id do recipient e do deliveryman existe
-    const { recipient_id, deliveryman_id } = req.body
+    const { recipient_id, deliveryman_id, product } = req.body
+
+    console.log('Recip: ', recipient_id);
+    console.log('Deliv: ', deliveryman_id);
+    console.log('Prod: ', product);
 
     const isRecipient = await Recipients.findOne({
       where: {
@@ -212,14 +221,65 @@ class OrdersController {
     if (!isRecipient) {
       return res.status(400).json({ error: 'Recipient not found.' })
     }
-
+    
+    console.log('Pass2');
     if (!isDeliveryman) {
       return res.status(400).json({ error: 'Deliveryman not found.' })
     }
 
+    console.log('Pass3');
+
     const orderAt = await orders.update(req.body)
 
-    return res.json(orderAt)
+    console.log('Pass4');
+    const data = await Orders.findByPk(id, {
+        attributes: [
+          'id',
+          'recipient_id',
+          'deliveryman_id',
+          'product',
+          'canceled_at',
+          'start_date',
+          'end_date',
+        ],
+        include: [
+          {
+            model: Recipients,
+            as: 'recipient',
+            attributes: [
+              'id',
+              'nome',
+              'rua',
+              'numero',
+              'complemento',
+              'estado',
+              'cidade',
+              'cep',
+            ],
+            include: [
+              {
+                model: Filesignature,
+                as: 'signature',
+                attributes: ['id', 'path', 'url'],
+              },
+            ],
+          },
+          {
+            model: Deliveryman,
+            as: 'deliveryman',
+            attribute: ['id', 'name', 'email'],
+            include: [
+              {
+                model: File,
+                as: 'avatar',
+                attributes: ['id', 'path', 'url'],
+              },
+            ],
+          },
+        ],
+      })
+
+    return res.json(data)
   }
 
   async delete(req, res) {

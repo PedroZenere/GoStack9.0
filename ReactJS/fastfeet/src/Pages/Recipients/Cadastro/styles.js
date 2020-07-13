@@ -98,50 +98,101 @@ export const Dados = styled.div`
   width: 100%;
   padding: 0 30px;
   background: #fff;
+  margin-top: 20px;
+`;
+
+export const Nome = styled.div`
+  display: flex;
+  flex-direction: row;
 
   div {
-    display: flex;
-    margin-top: 30px;
-    justify-content: space-between;
+    display: block;
+    p {
+      color: #444444;
+      font-size: 14px;
+      margin-top: 20px;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
 
-    div {
-      display: block;
-      margin-right: 30px;
-
-      p {
-        color: #444444;
-        font-size: 14px;
-        margin-bottom: 10px;
-        font-weight: bold;
-      }
-
-      input {
-        width: 405px;
-        height: 45px;
-        border: 1px solid #dddddd;
-        border-radius: 4px;
-        padding: 0 10px;
-      }
+    input {
+      width: 840px;
+      height: 45px;
+      border: 1px solid #dddddd;
+      border-radius: 4px;
+      padding: 0 10px;
+      margin-bottom: 10px;
     }
   }
 `;
 
-export const NomeProd = styled.div`
+export const Endereco = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  justify-content: space-between;
 
-  p {
-    color: #444444;
-    font-size: 14px;
-    margin-bottom: 10px;
-    font-weight: bold;
+  div {
+    display: block;
+    p {
+      color: #444444;
+      font-size: 14px;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+
+    input {
+      width: 150px;
+      height: 45px;
+      border: 1px solid #dddddd;
+      border-radius: 4px;
+      padding: 0 10px;
+      margin-bottom: 10px;
+    }
   }
+`;
 
-  input {
-    width: 405px;
-    height: 45px;
-    border: 1px solid #dddddd;
-    border-radius: 4px;
-    padding: 0 10px;
+export const Rua = styled.div`
+  display: block;
+
+  div {
+    p {
+      color: #444444;
+      font-size: 14px;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+
+    input {
+      width: 500px;
+      height: 45px;
+      border: 1px solid #dddddd;
+      border-radius: 4px;
+      padding: 0 10px;
+      margin-bottom: 10px;
+    }
+  }
+`;
+
+export const Cidade = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+  div {
+    p {
+      color: #444444;
+      font-size: 14px;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+
+    input {
+      width: 269px;
+      height: 45px;
+      border: 1px solid #dddddd;
+      border-radius: 4px;
+      padding: 0 10px;
+      margin-bottom: 20px;
+    }
   }
 `;

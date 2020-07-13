@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 // import { useDispatch, useSelector } from 'react-redux';
 
-import ButtonList from '../../components/buttonsOrder';
+import ButtonProblem from '../../components/buttonsProblem';
 
 import api from '../../services/api';
 
@@ -15,6 +15,7 @@ function Problems() {
       const response = await api.get('orders');
 
       setProblems(response.data);
+      console.log('Problem: ', response.data);
     }
 
     loadProblems();
@@ -37,13 +38,15 @@ function Problems() {
           {problems.map((problem) => (
             <tr key={problem.id}>
               <td>
-                <span>#{problem.delivery_id}</span>
+                <span>#{problem.deliveryman_id}</span>
               </td>
               <td>
-                <span>{problem.description}</span>
+                <span>
+                  {problem.description || 'Nenhum problema com esta encomenda'}
+                </span>
               </td>
               <td>
-                <ButtonList />
+                <ButtonProblem idProblem={problem.id} />
               </td>
             </tr>
           ))}
