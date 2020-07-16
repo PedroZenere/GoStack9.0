@@ -1,12 +1,23 @@
 import produce from 'immer';
 
-export default function orders(state = [], action) {
+const INTIAL_STATE = {
+  data: [],
+  loading: false,
+};
+
+export default function orders(state = INTIAL_STATE, action) {
   switch (action.type) {
+    case '@order/ORDER_REQUEST':
+      return produce(state, (draft) => {
+        console.log('Chamou');
+        draft.loading = true;
+      });
     case '@order/ORDER_SUCCESS':
       return produce(state, (draft) => {
-        draft.splice(0);
-        // console.log('OrdRed: ', action.payload);
-        draft.push(...action.payload);
+        // draft.splice(0);
+        console.log('OrdRed: ', action.payload);
+        draft.data = action.payload;
+        draft.loading = false;
         // draft.order.push(action.payload);
       });
     case '@order/ORDER_FILTER_SUCCESS':

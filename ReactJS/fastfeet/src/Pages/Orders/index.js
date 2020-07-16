@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { FiPlus } from 'react-icons/fi';
@@ -21,28 +21,19 @@ import {
 } from './styles';
 
 export default function Orders() {
-  const [orders, setOrders] = useState([]);
-  const [loading, setLoading] = useState(false);
-
   const dispatch = useDispatch();
-
-  const ord = useSelector((state) => state.order);
+  const ord = useSelector((state) => state.order.data);
+  const loading = useSelector((state) => state.order.loading);
 
   useEffect(() => {
-    // console.log('Executei?');
     dispatch(OrderRequest());
-
-    setOrders(ord);
-    if (ord) {
-      setLoading(true);
-    }
-  }, [dispatch, ord]);
+  }, []);
 
   async function handleFilter(e) {
     dispatch(OrderRequestFilter(e.target.value));
   }
 
-  // console.log('Orders: ', orders);
+  // console.log('Orders: ', ord);
 
   function handleStatusColorButton(status) {
     switch (status) {
@@ -70,7 +61,8 @@ export default function Orders() {
     }
   }
 
-  if (!loading) {
+  if (loading) {
+    console.log('Orders TAM: ', ord.length);
     return (
       <Container>
         <Manager>
@@ -100,6 +92,7 @@ export default function Orders() {
       </Container>
     );
   } else {
+    console.log('Orders: ', ord);
     return (
       <Container>
         <Manager>
@@ -139,7 +132,7 @@ export default function Orders() {
             </tr>
           </thead>
           <tbody>
-            {orders.map((product) => (
+            {ord.map((product) => (
               <tr key={product.id}>
                 <td>
                   <span>#{product.id}</span>

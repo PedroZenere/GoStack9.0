@@ -1,4 +1,4 @@
-import { all, call, put, select, takeLatest } from 'redux-saga/effects';
+import { all, call, put, takeLatest } from 'redux-saga/effects';
 import { toast } from 'react-toastify';
 
 import api from '../../../services/api';
@@ -24,22 +24,23 @@ function verifyStatus(order) {
 }
 
 export function* orderList() {
+  console.log('Eu ouvi');
   try {
+    console.log('Vou chamar API');
     const response = yield call(api.get, 'orders');
-
-    const st = yield select((state) => state.order);
+    console.log('DataSagas: ', response.data);
 
     const data = response.data.map((product) => ({
       ...product,
       status: verifyStatus(product),
     }));
+    console.log('Peguei os dados');
+    console.log('DataSagas: ', data);
 
-    console.log('Data: ', data);
-
-    if (st.length === data.length) return;
-
-    yield put(OrderSuccess(data));
+    yield put(OrderSuccess(response.data));
   } catch (err) {
+    console.log('ERRROOOOOO');
+    console.log(err);
     toast.error('Erro na requisição');
   }
 }
